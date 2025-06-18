@@ -273,10 +273,18 @@ async def handle_question(request: Request):
 
 
 if __name__ == "__main__":
-    import os
-    import uvicorn
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn.run("main:app", host="0.0.0.0", port=port)
+    from pyngrok import ngrok
+
+    # Open an ngrok tunnel to the default uvicorn port
+    public_url = ngrok.connect(
+        addr=8000,
+        proto="http",
+        domain="sure-locust-properly.ngrok-free.app"  # <-- your reserved subdomain
+    )
+    print(f"Public Ngrok URL: {public_url}")
+
+    # Start uvicorn programmatically
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
 
 # Local testing block
 # if __name__ == "__main__":
